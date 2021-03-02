@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miaged_app/DataManagment/VetementData.dart';
 import 'package:miaged_app/DiffenrentesPages/VetementModelDetails.dart';
 import 'package:miaged_app/ServiceAuthentification/AuthServices.dart';
 
@@ -13,7 +14,16 @@ class ListeVetements extends StatefulWidget{
 class _ListeVetementsState extends State<ListeVetements> {
   AuthServices _auth = AuthServices();
   int currentIndex = 0;
+  int currentIndexVet = 0;
+  List listvetement = [];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listVetementFromFirestore();
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,11 +42,27 @@ class _ListeVetementsState extends State<ListeVetements> {
           ),
         ],
       ),
-      body: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          buildListVet(),
-        ],
+      body: Container(
+        child: ListView.builder(
+            itemCount: listvetement.length,
+            itemBuilder: (context, index){
+              return Card(
+                child: ListTile(
+                  leading: Image.network(listvetement[index]['img']),
+
+                  title: Text(listvetement[index]['titre']),
+                  subtitle: Text("Taille $listvetement[index]['taille']"),
+                  trailing: TextButton(
+                      child: Text('Details'),
+                      onPressed: () {
+                        //rediriger vers la page details
+                      }
+                  ),
+                ),
+              );
+
+            }
+        ),
       ),
       // Center(        child:  buildListVet(),  ),
       //Text("vous etes sur la page $currentIndex"),
@@ -52,6 +78,18 @@ class _ListeVetementsState extends State<ListeVetements> {
       ),
     );
   }
+  listVetementFromFirestore() async {
+    dynamic res = await VetementData().getListVet();
+    if(res != null){
+      setState(() {
+        listvetement = res;
+      });
+    }else{
+      print('impossible de recuperer les données');
+    }
+  }
+
+
   Widget buildIteminNavigationButton(IconData iconData, int index){
     return  GestureDetector(
       onTap: (){
@@ -70,103 +108,34 @@ class _ListeVetementsState extends State<ListeVetements> {
     );
 }
 
-  Widget buildListVet(){
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("ListVet").snapshots(),
-        builder: (context, snapshot){
-          return ListView.builder(
-            itemCount: snapshot.data.docs.length,
+Widget buildVetDetails (int index){
+    return GestureDetector(
+      onTap: (){
+        currentIndexVet = index;
+      },
+      child: Container(
+        child: ListView.builder(
+            itemCount: 1,
             itemBuilder: (context, index){
-              DocumentSnapshot vetement = snapshot.data.docs[index];
-              return GestureDetector(
-                onTap: (){
-                 // Navigator.push(context, MaterialPageRoute(builder: (context) => VetementModelDetails()));
-                },
-
+              return Card(
                 child: ListTile(
-                  leading: Image.network(vetement['img']),
-                  title: Text(vetement['titre'] ),
+                  leading: Image.network(listvetement[index]['img']),
+                  title: Text(listvetement[index]['titre']),
+                  subtitle: Text("Taille $listvetement[index]['taille']"),
+                  trailing: TextButton(
+                      child: Text('Details'),
+                      onPressed: () {
+                        //rediriger vers la page details
+                      }
+                  ),
                 ),
-             );
-              },
+              );
 
-          );
-        }
+            }
+        ),
+      ),
     );
-  }
-}
-/*
-Widget showDialogFunc(BuildContext context, img, titre, taille, prix){
-  return  Scaffold(
-    body: StreamBuilder(
-        builder : (context, snapshot) {
-          return  ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index){
-                return Card(
-                  child: ListTile(
-                    title: Text(titre ),
-                    leading: Image.network(img),
-                    subtitle: Text(taille),
-                    trailing: Text(prix) ,
-                  ),
-                );
-              }
-          );
-        }
-
-    ),
-  );
-
- */
-/*
-showDialogFunc(BuildContext context, img, titre, taille, prix) {
-  return showDialog(
-      context: context,
-      builder: (context){
-        return Center(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color : Colors.green,
-              ),
-              padding: EdgeInsets.all(15),
-              width: MediaQuery.of(context).size.width *0.7,
-              height: 320,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius : BorderRadius.circular(5),
-                    child: Image.asset(
-                      img,
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    titre,
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    'Taille :  $taille',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    'Prix :  $prix € ',
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }
-  );
 }
 
- */
-
+}
 
