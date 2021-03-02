@@ -1,16 +1,15 @@
 # miaged_app
+Ce qui a été effectué : 
+us 1 : Intérface de login 
+  - Inscription 
+      - Le password doit contenir au minimum 8 caractères
+      - tout les champs doivent etre rempli sinon un message d'erreur s'affiche
+  - Se connecter
+  - Validation des champs 
+ 
+ Scénario : lorsque une personne s'inscrit pour la première fois ( après avoir rempli le formulaire d'inscription) il sera redirgé vers la page de login pour qu'il puisse se connecter
+User à utiliser pour une connexion : email : djaoutlouiza@gmail.com / pwd : 12345678
 
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+us 2 : liste des vetements
+ 
+ us3 , us4, us5, us6 n'ont faites... désolée...
